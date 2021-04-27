@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View, Linking } from 'react-native';
 import AddressList from './AddressList';
 import ListFood from './ListFood';
 
@@ -23,10 +23,18 @@ const OrderScreen = ({onClose}) => {
 
       <View style={styles.footer}>
         <Text style={styles.total}>Total: $17.50</Text>
-        <Pressable style={styles.buttonOrder}>
+
+      
+
+        <Pressable style={styles.buttonOrder}
+         onPress={() => { Linking.openURL('https://www.sandbox.paypal.com/checkoutnow?token=2CN34622VF479594M%27') }}  //   https://www.sandbox.paypal.com/checkoutnow?token=2CN34622VF479594M
+        >
           <Text style={styles.textOrder}>Place Order</Text>
+          
+                
           <Image source={require('../../assets/images/arrow.png')} />
         </Pressable>
+
       </View>
     </View>
   );

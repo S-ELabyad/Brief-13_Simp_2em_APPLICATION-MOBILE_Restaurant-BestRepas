@@ -26,18 +26,22 @@ import ModalOrder from './src/screens/order/ModalOrder';
 
 const types = [
   {
+    id:1,
     type: 'Dinner',
     image: require('./src/assets/images/dinner.png'),
   },
   {
+    id:2,
     type: 'Lunch',
     image: require('./src/assets/images/lunch.png'),
   },
   {
+    id:3,
     type: 'Breakfast',
     image: require('./src/assets/images/breakfast.png'),
   },
   {
+    id:4,
     type: 'Dessert',
     image: require('./src/assets/images/dessert.png'),
   },
@@ -72,7 +76,7 @@ const App = () => {
     <RestaurantItem 
     Type={types.find(x=>x.id==IdSelected)} 
     data={item} 
-    onPress={onPressItem} />;
+    onPress={onPressItem} />
     );
   };
   const [data, setData] = useState([]);
