@@ -1,25 +1,25 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 
-const RestaurantItem = ({data, onPress}) => {
+const RestaurantItem = ({ Type ,data, onPress}) => {
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <View>
-        <Image source={data.background} style={styles.image} />
+        <Image source={{uri: data.image}} style={styles.image} />
         <View style={styles.milesView}>
-          <Text style={styles.milesText}>{data.miles} miles</Text>
+          <Text style={styles.milesText}>{data.miles || 0} miles</Text>
         </View>
       </View>
       <Text style={styles.name}>{data.name}</Text>
       <Text style={styles.description}>
-        {data.type} • {data.country} • ${data.currency}
+        {Type.type} • {data.restaurant} • {data.price}DH
       </Text>
       <View style={styles.smileList}>
         <Image
           source={require('../../assets/images/smile.png')}
           style={styles.icon}
         />
-        <Text style={styles.smile}>{data.smile}%</Text>
+        <Text style={styles.smile}>{data.smile || 0}%</Text>
       </View>
     </Pressable>
   );
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 180,
     borderRadius: 10,
+    backgroundColor : '#fafefe',
   },
   name: {
     fontFamily: 'CeraPro-Bold',

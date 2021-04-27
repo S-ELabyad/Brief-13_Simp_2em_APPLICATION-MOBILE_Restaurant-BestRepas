@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,7 +15,9 @@ import {
   Text,
   StatusBar,
   Image,
+  ActivityIndicator,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import SearchBar from './src/components/SearchBar';
 import BottomBar from './src/screens/home/BottomBar';
 import ItemType from './src/screens/home/ItemType';
@@ -65,20 +67,47 @@ const listRestaurants = [
 const App = () => {
   const [isOrder, setIsOrder] = useState(false);
   const onPressItem = () => setIsOrder(true);
-  const renderRestaurant = (item) => {
-    return <RestaurantItem data={item} onPress={onPressItem} />;
+  const renderRestaurant = ({item}) => {
+    return (
+    <RestaurantItem 
+    Type={types.find(x=>x.id==IdSelected)} 
+    data={item} 
+    onPress={onPressItem} />;
+    );
   };
+  const [data, setData] = useState([]);
+  const [loading, setloading] = useState(false)
   const [IdSelected , setIdSelected] = useState(1);
   const onClose = () => setIsOrder(false);
   const onSelected = (id) => {
     // alert('id' + id);
     setIdSelected(id);
+   
   };
-  const _ fectListFood = async() => {
+  useEffect(() => {
+    _fectListFood() ;
+   
+  }, [IdSelected]);
+  const _fectListFood = async() => {
 try {
-  const res = await
+  setloading(true);
+  setData([]);
+  const res = await fetch('https://api-appfood.herokuapp.com/v1/foods?type=' + IdSelected, {
+     method : 'GET',
+     headers : {
+       'Content-Type' : 'application/json',
+     },
+  },
+  );
+   const data = await res.json();
+   if(data.status==1) {
+     setData(data.data);
+   }
+ 
 } catch (error) {
-  
+  console.log(error);
+} finally {
+  setloading(false);
 }
   };
   return (
@@ -113,13 +142,24 @@ try {
               Lunch Restaurants Near You
             </Text>
             <View style={styles.listRes}>
-              {listRestaurants.map(renderRestaurant)}
+              {/* {data.map(renderRestaurant)} */}
+              <FlatList 
+                data = {data}
+                extraData = {data}
+                renderItem = {renderRestaurant}
+              />
+              {loading && 
+                <View style={styles.loading}> 
+                    <ActivityIndicator size="large" color="#59B7C9" /> 
+              </View>
+              }
             </View>
           </View>
         </ScrollView>
         <BottomBar />
       </SafeAreaView>
-      {isOrder && <ModalOrder onClose={onClose} isShow={isOrder} />}
+      {isOrder &&
+       <ModalOrder onClose={onClose} isShow={isOrder} />}
     </>
   );
 };
@@ -182,6 +222,12 @@ const styles = StyleSheet.create({
 
   listRestaurant: {
     marginTop: 10,
+  },
+  loading : {
+    height : 300,
+    width:'100%' ,
+    justifyContent : 'center',
+    alignItems : 'center',
   },
 });
 
